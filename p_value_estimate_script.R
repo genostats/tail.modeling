@@ -21,10 +21,10 @@ for(i in 1:length(Nsim)){
 }
 
 ##Graphiques ----
-# boxplot( -log10(Pe), -log10(Pg),-log10(Pli) ,-log10(Pb),
-#          names=c("ECDF","GPD","Reg Lin","BoxCox"))
-boxplot( -log10(Pli) ,-log10(Pb),
-         names=c("Reg Lin","BoxCox"))
+boxplot( -log10(Pe), -log10(Pg),-log10(Pli) ,-log10(Pb),
+         names=c("ECDF","GPD","Reg Lin","BoxCox"))
+# boxplot( -log10(Pli) ,-log10(Pb),
+#          names=c("Reg Lin","BoxCox"))
 abline(h=-log10(Pperm),col="red")
 abline(h=-0.9*log10(Pperm),col="red",lty=3)
 abline(h=-1.1*log10(Pperm),col="red",lty=3)
@@ -33,7 +33,7 @@ plot(Nsim,-log10(Pli),
      col="red",
      type="l",
      ylab="",
-     main=paste0("Loi ",loi),
+     main=paste0("Probabilite estimee"),
      ylim=c(-log10(Pperm)-1,-log10(Pperm)+1)
      )
 lines(Nsim,-log10(Pb),col="black")

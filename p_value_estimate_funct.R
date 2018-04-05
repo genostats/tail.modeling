@@ -10,11 +10,23 @@ nb_exc<-function(x0,z){  ##pas besoin d'une boucle en fait
   M<-length(z[z>=x0])
   return(M)
 }
+
 #calcul de Pecdf----
 PECDF<-function(x0,y){
   return((1+nb_exc(x0,y))/length(y))
 }
 
+#critere de queue lourde a appliquer a Zsim[[nbsim]]
+critereLourd<-function(z,N){
+  z<-sort(z)
+  p<-seq(1,N)/N #proba empiriques p(X<Z)
+  d<-diff(c(z[sum(p<=0.97)],z[sum(p<=0.98)], z[sum(p<=0.99)],z[sum(p<=0.999)])) #diff des ecarts des quantiles empiriques
+  R<-(d[3]-d[2])/(d[2]-d[1])
+  if (R > 6)
+    return(TRUE) ##queue lourde, on prend le log des statistiques de test
+  else
+    return(FALSE)
+}
 #GPD ----
 # estimateur PWM pour les parametres de la GPD
 PWM <- function(z) {
@@ -52,8 +64,16 @@ PML<-function(z,Ntot,N){
   p <- seq(N,1)/Ntot
   # le modele ~ lineaire 
   # estimation de P( Z > Zobs) par regression lineaire
-  coeffs <- lm(  log(-log(p)) ~ log(z) )$coefficients
-  return(list(p = exp(-exp( sum( coeffs*c(1, log(Zobs)) ) )), inter = coeffs[[1]], pente = coeffs[[2]]))
+  if (critereLourd(Zsim[[nbsim]],end) == TRUE){
+    coeffs <- lm(  log(-log(p)) ~ log(log(z)) )$coefficients
+    return(list(p = exp(-exp( sum( coeffs*c(1, log(log(Zobs))) ) )), 
+                inter = coeffs[[1]], 
+                pente = coeffs[[2]]))}
+  if (critereLourd(Zsim[[nbsim]],end) == FALSE){
+    coeffs <- lm(  log(-log(p)) ~ log(z) )$coefficients
+    return(list(p = exp(-exp( sum( coeffs*c(1, log(Zobs)))  )), 
+              inter = coeffs[[1]], 
+              pente = coeffs[[2]]))}
 }
 
 #Box-Cox transformation ----
@@ -67,20 +87,38 @@ BoxCox<-function(z,lambda){
 
 PBC<-function(z,Ntot,N){
   p<-seq(N,1)/Ntot
-  b<-boxcox( log(-log(p)) ~ log(z),plotit=F) ##which lambda to choose
-  lambda <- b$x[which.max(b$y)]
-  coeffs <- lm(  BoxCox(log(-log(p)),lambda) ~ log(z) )$coefficients
-  Bp<-sum( coeffs*c(1, log(Zobs)))
-  if (lambda != 0)
-    return(list(p = exp(-exp((Bp*lambda+1)^(1/lambda))), 
-                interc = coeffs[[1]], 
-                pente = coeffs[[2]],
-                lbda = lambda))
-  else
-    return(list(p = exp(-exp(exp(Bp))),
-                interc = coeffs[[1]], 
-                pente = coeffs[[2]],
-                lbda = lambda))
+  if (critereLourd(Zsim[[nbsim]],end) == FALSE){
+    b<-boxcox( log(-log(p)) ~ log(z),plotit=F) ##which lambda to choose
+    lambda <- b$x[which.max(b$y)]
+    coeffs <- lm(  BoxCox(log(-log(p)),lambda) ~ log(z) )$coefficients
+    Bp<-sum( coeffs*c(1, log(Zobs)))
+    if (lambda != 0)
+      return(list(p = exp(-exp((Bp*lambda+1)^(1/lambda))), 
+                  interc = coeffs[[1]], 
+                  pente = coeffs[[2]],
+                  lbda = lambda))
+    else
+      return(list(p = exp(-exp(exp(Bp))),
+                  interc = coeffs[[1]], 
+                  pente = coeffs[[2]],
+                  lbda = lambda))
+  }
+  if (critereLourd(Zsim[[nbsim]],end) == TRUE){
+    b<-boxcox( log(-log(p)) ~ log(log(z)),plotit=F) ##which lambda to choose
+    lambda <- b$x[which.max(b$y)]
+    coeffs <- lm(  BoxCox(log(-log(p)),lambda) ~ log(log(z)) )$coefficients
+    Bp<-sum( coeffs*c(1, log(log(Zobs))))
+    if (lambda != 0)
+      return(list(p = exp(-exp((Bp*lambda+1)^(1/lambda))), 
+                  interc = coeffs[[1]], 
+                  pente = coeffs[[2]],
+                  lbda = lambda))
+    else
+      return(list(p = exp(-exp(exp(Bp))),
+                  interc = coeffs[[1]], 
+                  pente = coeffs[[2]],
+                  lbda = lambda))
+  }
 }
 
 
@@ -103,22 +141,11 @@ calcul_p<-function(zsim,Ntail){
               k=PWM(zgpd)$k))
 }
 
-##lourdeur de la queue de distribution
-#differences entre quantiles p( X< Z) lower tail
-# d<-diff(qlnorm( c(0.97,0.98, 0.99,0.999),sdlog=2))
-# d<-diff(qnorm( c(0.97,0.98, 0.99,0.999)))
-# d<-diff(qexp( c(0.97,0.98, 0.99,0.999)))
-# d<-diff(qf( c(0.97,0.98, 0.99,0.999),df1=5,df2=10))  ##valeurs tres proches entre F et Chi2
-# d<-diff(qchisq( c(0.97,0.98, 0.99,0.999),df=3))
-# d<-diff(qcauchy( c(0.97,0.98, 0.99,0.999)))
-# d<-diff(qpois( c(0.97,0.98, 0.99,0.999),lambda = 1e6))
-# (d[3]-d[2])/(d[2]-d[1]) #second ecart N fois plus grand que premier ecart => s'etale => lourd
-# 
-# #test sur quantiles empiriques avec 1e5 simulations par permutations
-# z<-sort(rcauchy(1e5))
-# p<-seq(1,1e5)/1e5 #proba empiriques p(X<Z)
-# q<-z[sum(p<=0.97)] #quantile empirique
-# 
-# d<-diff(c(z[sum(p<=0.97)],z[sum(p<=0.98)], z[sum(p<=0.99)],z[sum(p<=0.999)]))
-# (d[3]-d[2])/(d[2]-d[1])
+#test sur quantiles empiriques avec 1e5 simulations par permutations
+z<-sort(rcauchy(1e4))
+p<-seq(1,1e5)/1e5 #proba empiriques p(X<Z)
+q<-z[sum(p<=0.97)] #quantile empirique
+
+d<-diff(c(z[sum(p<=0.97)],z[sum(p<=0.98)], z[sum(p<=0.99)],z[sum(p<=0.999)]))
+(d[3]-d[2])/(d[2]-d[1])
 
