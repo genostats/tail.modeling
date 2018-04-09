@@ -76,7 +76,7 @@ PML<-function(z,Ntot,N){
               pente = coeffs[[2]]))}
 }
 
-#Box-Cox transformation ----
+##Box-Cox transformation ----
 
 BoxCox<-function(z,lambda){
   if (lambda != 0)
@@ -85,7 +85,8 @@ BoxCox<-function(z,lambda){
     return(log(z))
 }
 
-PBC<-function(z,Ntot,N){
+#BC applique a la proba p
+PBC<-function(z,Ntot,N){  
   p<-seq(N,1)/Ntot
   if (critereLourd(Zsim[[nbsim]],end) == FALSE){
     b<-boxcox( log(-log(p)) ~ log(z),plotit=F) ##which lambda to choose
@@ -121,6 +122,33 @@ PBC<-function(z,Ntot,N){
   }
 }
 
+#BC applique a la statistique z
+
+box.cox.lm <- function(Y,X) {  #estimation de lambda par les moindres carrés
+  f <- function(lambda) {
+    if(lambda == 0)
+      X <- log(X)
+    else
+      X <- (X**lambda - 1)/lambda
+    
+    b <-  cov(X,Y) / var(X)
+    a <- mean(Y) - b*mean(X)
+    #cat("lambda = ", lambda, " a = ", a, "b = ", b, "\n")
+    sum( (Y - a - b*X)**2 )
+  }
+  optimize(f,c(0,1))$minimum
+}
+
+PBC_Z<-function(z,Ntot,N){  
+  p<-seq(N,1)/Ntot
+  lambda <- box.cox.lm(log(-log(p)),log(z))
+  coeffs <- lm(  log(-log(p)) ~ BoxCox(log(z),lambda) )$coefficients
+  return(list(p = exp(-exp(sum( coeffs*c(1, BoxCox(log(Zobs),lambda))))), 
+                interc = coeffs[[1]], 
+                pente = coeffs[[2]],
+                lbda = lambda))
+  
+}
 
 ## regroupement des p valeurs des differentes methodes ----
 
@@ -137,15 +165,9 @@ calcul_p<-function(zsim,Ntail){
               Pgpd=PGPD(Zobs,zgpd,zsim,t),
               Plin=PML(z1,length(zsim),Ntail)$p,
               Pbc = PBC(z1,length(zsim),Ntail)$p,
+              Pbc_z = PBC_Z(z1,length(zsim),Ntail)$p,
               a=PWM(zgpd)$a,
               k=PWM(zgpd)$k))
 }
 
-#test sur quantiles empiriques avec 1e5 simulations par permutations
-z<-sort(rcauchy(1e4))
-p<-seq(1,1e5)/1e5 #proba empiriques p(X<Z)
-q<-z[sum(p<=0.97)] #quantile empirique
-
-d<-diff(c(z[sum(p<=0.97)],z[sum(p<=0.98)], z[sum(p<=0.99)],z[sum(p<=0.999)]))
-(d[3]-d[2])/(d[2]-d[1])
 
