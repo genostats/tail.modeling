@@ -48,17 +48,17 @@ def FGPD(z,zexc):
   a = coeff['a']
   k = coeff['k']
   if k!= 0:
-    return [1-(1-k*x/a)**(1/k) for x in z]
+    return 1-(1-k*z/a)**(1/k) 
   else:
-    return [1-np.exp(-x/a) for x in z]
-
+    return 1-np.exp(-z/a) 
+    
 """calcul de Pgpd"""
 def PGPD(x0,zexc,y,seuil):
   M = nb_exc(x0,y)
   if M >= 10:
     return M/len(y)
   else:
-    return [len(zexc)/len(y)*(1-x) for x in FGPD(x0-seuil,zexc)]
+    return len(zexc)/len(y)*(1-FGPD(x0-seuil,zexc)) 
 
 """le modele lineaire """
 def PML(z,Ntot,N):
