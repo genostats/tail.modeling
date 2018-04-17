@@ -1,4 +1,4 @@
-####Fonctions utile pour estimer la p-valeur 
+####Fonctions utiles pour estimer la p-valeur 
 
 ### Librairie a charger ----
 library(MASS)
@@ -39,9 +39,29 @@ PWM <- function(z) {
   list(a = a, k = k)
 }
 
+# estimateur du max de vraisemblance (via une vraisemblance profilée)
+k_func <- function(u, z) -mean(log(1-u*z))
+
+Lp <- function(u,z) {
+  n <- length(z)
+  if(u == 0) 
+    return( -n*(log(mean(z)) + 1) )
+  k <- k_func(u,z)
+  n*(log(u/k) + k - 1)
+}
+
+EMV <- function(z) {
+  u <- optimize(function(u) Lp(u,z), c(-10, min(1/z)), maximum=TRUE )$maximum
+  if(u == 0) 
+    return(list( a = mean(z), k = 0))
+  k <- k_func(u, z)
+  list(a = k/u, k = k)
+}
+
+
 #Fonction de repartition de Pareto
 FGPD<-function(z,zexc){
-  coeff<-PWM(zexc)
+  coeff<-EMV(zexc)
   a<-coeff$a
   k<-coeff$k
   if (k!= 0)
@@ -166,6 +186,7 @@ calcul_p<-function(zsim,Ntail){
               Plin=PML(z1,length(zsim),Ntail)$p,
               Pbc = PBC(z1,length(zsim),Ntail)$p,
               Pbc_z = PBC_Z(z1,length(zsim),Ntail)$p,
+              lbda = PBC_Z(z1,length(zsim),Ntail)$lbda,
               a=PWM(zgpd)$a,
               k=PWM(zgpd)$k))
 }
