@@ -53,12 +53,12 @@ FGPD<-function(z,zexc,estim){
 }
 
 #calcul de Pgpd
-PGPD<-function(x0,zexc,y,seuil){
+PGPD<-function(x0,zexc,y,seuil,estim){
   M<-nb_exc(x0,y)
   if(M >= 10)
     return(M/length(y))
   else
-    return(length(zexc)/length(y)*(1-FGPD(x0-seuil,zexc)))
+    return(length(zexc)/length(y)*(1-FGPD(x0-seuil,zexc,estim)))
 }
 ##Box-Cox transformation ----
 
@@ -85,9 +85,9 @@ BoxCox_lm <- function(Y,X) {  #estimation de lambda par les moindres carrés
   optimize(f,c(0,1))$minimum
 }
 
-PBC_Z<-function(z,Ntot,N,param="LS"){  
+PBC_Z<-function(z,Ntot,N,param=NA,Zobs){  
   p<-seq(N,1)/Ntot
-  if (param == "LS")
+  if (is.na(param))
     lambda <- BoxCox_lm(log(-log(p)),log(z))
   else
     lambda <- param
@@ -101,25 +101,25 @@ PBC_Z<-function(z,Ntot,N,param="LS"){
 
 ## regroupement des p valeurs des differentes methodes ----
 
-calcul_p<-function(zsim,Ntail,estim){  
+calcul_p<-function(zsim,Ntail,estim,Zobs,param){  
   # les Ntail plus grandes valeurs (les dernieres)
   z1 <- tail( sort(zsim) , Ntail )
   #seuil pour la GDP
   t<-(z1[1] + head(sort(zsim,decreasing =TRUE),Ntail+1)[Ntail+1])/2
   #calcul des excedents de la GDP, ceux qui lui sont sup?rieurs
   zgpd<-z1-t
-  zgpd<-zgpd[zgpd>0] #uniquement ceux sup?rieurs au seuil
+  zgpd<-zgpd[zgpd>0] #uniquement ceux superieurs au seuil
   
   if (estim == "PWM")
-    return(list(Pgpd=PGPD(Zobs,zgpd,zsim,t),
-                Pbc_z = PBC_Z(z1,length(zsim),Ntail)$p,
-                lbda = PBC_Z(z1,length(zsim),Ntail)$lbda,
+    return(list(Pgpd=PGPD(Zobs,zgpd,zsim,t,estim),
+                Pbc_z = PBC_Z(z1,length(zsim),Ntail,param,Zobs)$p,
+                lbda = PBC_Z(z1,length(zsim),Ntail,param,Zobs)$lbda,
                 a=PWM(zgpd)$a,
                 k=PWM(zgpd)$k))
   else
-    return(list(Pgpd=PGPD(Zobs,zgpd,zsim,t),
-                Pbc_z = PBC_Z(z1,length(zsim),Ntail)$p,
-                lbda = PBC_Z(z1,length(zsim),Ntail)$lbda,
+    return(list(Pgpd=PGPD(Zobs,zgpd,zsim,t,estim),
+                Pbc_z = PBC_Z(z1,length(zsim),Ntail,param,Zobs)$p,
+                lbda = PBC_Z(z1,length(zsim),Ntail,param,Zobs)$lbda,
                 a=EMV(zgpd)$a,
                 k=EMV(zgpd)$k))
     
@@ -127,7 +127,7 @@ calcul_p<-function(zsim,Ntail,estim){
 
 ###Calcul des estimations ----
 
-p_estimate<- function(Nsim=150,queue=500,Nperm=1e6,Z,method){
+p_estimate<- function(Nsim=150,queue=500,Nperm=1e6,Z,method,Zobs,estim,param){
   P<-rep(0,Nsim)
   Zsim<-list() #liste qui contient les Nsim échantillons permutés Nperm fois de l'echantillon ini Z
     for (i in 1:Nsim){
@@ -139,7 +139,7 @@ p_estimate<- function(Nsim=150,queue=500,Nperm=1e6,Z,method){
   if (method == "BC") {
     lbda<-rep(0,Nsim)
     for(i in 1:Nsim){
-      pval<-calcul_p(Zsim[[i]],queue)
+      pval<-calcul_p(Zsim[[i]],queue,estim,Zobs,param)
       P[i]<-pval$Pbc_z
       lbda[i]<-pval$lbda
     }
@@ -148,7 +148,7 @@ p_estimate<- function(Nsim=150,queue=500,Nperm=1e6,Z,method){
     k<-rep(0,Nsim)
     a<-rep(0,Nsim)
     for(i in 1:Nsim){
-      pval<-calcul_p(Zsim[[i]],queue)
+      pval<-calcul_p(Zsim[[i]],queue,estim,Zobs,param)
       P[i]<-pval$Pgpd
       a[i]<-pval$a
       k[i]<-pval$k
