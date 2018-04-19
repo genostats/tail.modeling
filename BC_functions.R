@@ -101,7 +101,7 @@ PBC_Z<-function(z,Ntot,N,param=NA,Zobs){
 
 ## regroupement des p valeurs des differentes methodes ----
 
-calcul_p<-function(zsim,Ntail,estim,Zobs,param,method){  
+calcul_p<-function(zsim,Ntail=500,estim=NA,Zobs,param=NA,method){  
   # les Ntail plus grandes valeurs (les dernieres)
   z1 <- tail( sort(zsim) , Ntail )
   #seuil pour la GDP
@@ -130,7 +130,7 @@ calcul_p<-function(zsim,Ntail,estim,Zobs,param,method){
 
 ###Calcul des estimations ----
 
-p_estimate<- function(Nsim=150,queue=500,Nperm=1e6,Z,method,Zobs,estim = NA,param =NA){
+p_estimate<- function(Nsim=150,queue=500,Z,method,Zobs,estim = NA,param =NA){
   P<-rep(0,Nsim)
   Zsim<-list() #liste qui contient les Nsim echantillons permutes Nperm fois de l'echantillon ini Z
     for (i in 1:Nsim){
@@ -145,7 +145,18 @@ p_estimate<- function(Nsim=150,queue=500,Nperm=1e6,Z,method,Zobs,estim = NA,para
       pval<-calcul_p(Zsim[[i]],queue,estim,Zobs,param,method)
       P[i]<-pval$Pbc_z
       lbda[i]<-pval$lbda
-    }
+    } 
+    b<-boxplot( -log10(P),main=paste0("Estimate P-value with ",method))
+    print("Quantiles")
+    print(b$stats)  
+      
+    plot(-log10(P),
+          col="red",
+          type="l",
+          ylab="",
+          main=paste0("Estimate probability with ",method, " (-log10(P))"))  
+    
+    return(list(P=P,lambda=lbda))
   }
   if (method == "GPD") {
     k<-rep(0,Nsim)
@@ -155,19 +166,20 @@ p_estimate<- function(Nsim=150,queue=500,Nperm=1e6,Z,method,Zobs,estim = NA,para
       P[i]<-pval$Pgpd
       a[i]<-pval$a
       k[i]<-pval$k
+    }
+    b<-boxplot( -log10(P),main=paste0("Estimate P-value with ",method))
+    print("Quantiles")
+    print(b$stats)
+
+    plot(-log10(P),
+          col="red",
+          type="l",
+          ylab="",
+          main=paste0("Estimate probability with ",method, " (-log10(P))"))
+      
+    return(list(P=P,a=a,k=k))
       
     }
-  }
-
-b<-boxplot( -log10(P),main=paste0("Estimate P-value with ",method))
-print("Quantiles")
-print(b$stats)  
-
-plot(-log10(P),
-     col="red",
-     type="l",
-     ylab="",
-     main=paste0("Estimate probability with ",method, " (-log10(P))")
-)
 }
+
 
