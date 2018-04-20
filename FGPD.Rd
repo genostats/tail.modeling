@@ -12,13 +12,13 @@ FGPD(z,zexc,estim)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{z}{ Real number in which the function will be evaluated
+  \item{z}{ Real number in which the function will be evaluated - can also be a list of real numbers
 %%     ~~Describe \code{x} here~~
 }
   \item{zexc}{ Data set - sorted list of real numbers
 %%     ~~Describe \code{x} here~~
 }
-  \item{estim}{ Method to estimate the parameters of Pareto's function - Boolean: either "EMV" for the method of maximum likelihood or "PWM" for the method of probability weighted moments
+  \item{estim}{ Method to estimate the parameters of Pareto's function - String: either "EMV" for the method of maximum likelihood or "PWM" for the method of probability weighted moments
 %%     ~~Describe \code{x} here~~
 }
 }

@@ -4,22 +4,25 @@
 \title{ Box-Cox function
 %%  ~~function to do ... ~~
 }
-\description{
+\description{ Computes the Box-Cox function evaluated in a real number z.
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-BoxCox(x)
+BoxCox(z,lambda)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{
+  \item{z}{ Real number - can also be a list of real numbers
+%%     ~~Describe \code{x} here~~
+}
+\item{lambda}{ Box-Cox parameter - real number
 %%     ~~Describe \code{x} here~~
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
-\value{
+\value{ Returns the value of the function evaluated in z with the parameter lambda chosen.
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
@@ -29,7 +32,7 @@ BoxCox(x)
 \references{
 %% ~put references to the literature/web site here ~
 }
-\author{
+\author{ Marion
 %%  ~~who you are~~
 }
 \note{
@@ -42,13 +45,15 @@ BoxCox(x)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+BoxCox(56,1)
 
 ## The function is currently defined as
 function (x)
 {
+  if (lambda != 0)
+    return((z^lambda - 1)/lambda)
+  else
+    return(log(z))
   }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

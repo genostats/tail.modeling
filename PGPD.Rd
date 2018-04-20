@@ -24,7 +24,7 @@ PGPD(x0,zexc,y,seuil,estim)
 \item{seuil}{ Threshold used to create the data set zexc composed of the values of y higher or equal to (x0 - seuil) - real number
 %%     ~~Describe \code{x} here~~
 }
-\item{estim}{ Method to estimate the parameters of Pareto's function - Boolean: either "EMV" for the method of maximum likelihood or "PWM" for the method of probability weighted moments
+\item{estim}{ Method to estimate the parameters of Pareto's function - String: either "EMV" for the method of maximum likelihood or "PWM" for the method of probability weighted moments
 %%     ~~Describe \code{x} here~~
 }
 }
