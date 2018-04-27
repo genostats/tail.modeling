@@ -49,7 +49,7 @@ and Ilya Shmulevich, Fewer permutations, more accurate P-values, Bioinformatics.
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-FGPD(3,sort(rnorm(1e6)),"PWM")
+FGPD(30,sort(rnorm(1e6)),"PWM")
 
 ## The function is currently defined as
 function (z, zexc, estim)
