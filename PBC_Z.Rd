@@ -8,7 +8,7 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-PBC_Z(z,Ntot,N,param=NA,Zobs)
+PBC_Z(z,Ntot,N,param,Zobs)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,7 +21,7 @@ PBC_Z(z,Ntot,N,param=NA,Zobs)
 \item{N}{ Number of observations in the data set z - integer
 %%     ~~Describe \code{x} here~~
 }
-\item{param}{ Box-cox parameter lambda - real number: Default value is NA that means that the parameter will be estimated with least squares; if it is remplaced by a real number, this value will be used for lambda without performing any estimation
+\item{param}{ Box-cox parameter lambda - real number: if param is missing, the parameter will be estimated with least squares; if it is a real number, this value will be used for lambda without performing any estimation
 %%     ~~Describe \code{x} here~~
 }
 \item{Zobs}{ Test statistic of the data set  - real number
@@ -63,7 +63,7 @@ PBC_Z(z = tail(sort(rnorm(1e6)),500),Ntot = 1e6,N = 500,Zobs = 3)
 function (x)
 {
   p<-seq(N,1)/Ntot
-  if (is.na(param))
+  if (missing(param))
     lambda <- BoxCox_lm(log(-log(p)),log(z))
   else
     lambda <- param

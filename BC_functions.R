@@ -85,9 +85,9 @@ BoxCox_lm <- function(Y,X) {  #estimation de lambda par les moindres carres
   optimize(f,c(0,1))$minimum
 }
 
-PBC_Z<-function(z,Ntot,N,param=NA,Zobs){  
+PBC_Z<-function(z,Ntot,N,param,Zobs){  
   p<-seq(N,1)/Ntot
-  if (is.na(param))
+  if (missing(param))
     lambda <- BoxCox_lm(log(-log(p)),log(z))
   else
     lambda <- param
@@ -101,7 +101,7 @@ PBC_Z<-function(z,Ntot,N,param=NA,Zobs){
 
 ## regroupement des p valeurs des differentes methodes ----
 
-calcul_p<-function(zsim,Ntail=500,estim=NA,Zobs,param=NA,method){  
+calcul_p<-function(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method = c("BC","GPD")){  
   # les Ntail plus grandes valeurs (les dernieres)
   z1 <- tail( sort(zsim) , Ntail )
   #seuil pour la GDP
@@ -110,11 +110,13 @@ calcul_p<-function(zsim,Ntail=500,estim=NA,Zobs,param=NA,method){
   zgpd<-z1-t
   zgpd<-zgpd[zgpd>0] #uniquement ceux superieurs au seuil
   
+  method<-match.arg(method)
   if (method == "BC")
     return(list(Pbc_z = PBC_Z(z1,length(zsim),Ntail,param,Zobs)$p,
                 lbda = PBC_Z(z1,length(zsim),Ntail,param,Zobs)$lbda))
   
   if (method =="GPD"){
+    estim<-match.arg(estim)
     if (estim == "PWM")
       return(list(Pgpd=PGPD(Zobs,zgpd,zsim,t,estim),
                   a=PWM(zgpd)$a,
@@ -126,60 +128,6 @@ calcul_p<-function(zsim,Ntail=500,estim=NA,Zobs,param=NA,method){
   }
   
     
-}
-
-###Calcul des estimations ----
-
-p_estimate<- function(Nsim=150,queue=500,Z,method,Zobs,estim = NA,param =NA){
-  P<-rep(0,Nsim)
-  Zsim<-list() #liste qui contient les Nsim echantillons permutes Nperm fois de l'echantillon ini Z
-    for (i in 1:Nsim){
-      set.seed(i)
-      perm<-sample(seq(length(Z)),length(Z),replace=FALSE)
-      Zsim<-c(Zsim,list(Z[perm]))
-    }
-
-  if (method == "BC") {
-    lbda<-rep(0,Nsim)
-    for(i in 1:Nsim){
-      pval<-calcul_p(Zsim[[i]],queue,estim,Zobs,param,method)
-      P[i]<-pval$Pbc_z
-      lbda[i]<-pval$lbda
-    } 
-    b<-boxplot( -log10(P),main=paste0("Estimate P-value with ",method))
-    print("Quantiles")
-    print(b$stats)  
-      
-    plot(-log10(P),
-          col="red",
-          type="l",
-          ylab="",
-          main=paste0("Estimate probability with ",method, " (-log10(P))"))  
-    
-    return(list(P=P,lambda=lbda))
-  }
-  if (method == "GPD") {
-    k<-rep(0,Nsim)
-    a<-rep(0,Nsim)
-    for(i in 1:Nsim){
-      pval<-calcul_p(Zsim[[i]],queue,estim,Zobs,param,method)
-      P[i]<-pval$Pgpd
-      a[i]<-pval$a
-      k[i]<-pval$k
-    }
-    b<-boxplot( -log10(P),main=paste0("Estimate P-value with ",method))
-    print("Quantiles")
-    print(b$stats)
-
-    plot(-log10(P),
-          col="red",
-          type="l",
-          ylab="",
-          main=paste0("Estimate probability with ",method, " (-log10(P))"))
-      
-    return(list(P=P,a=a,k=k))
-      
-    }
 }
 
 

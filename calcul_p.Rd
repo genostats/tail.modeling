@@ -8,7 +8,7 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-calcul_p(zsim,Ntail=500,estim=NA,Zobs,param=NA,method)
+calcul_p(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method=c("BC","GPD"))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,16 +18,16 @@ calcul_p(zsim,Ntail=500,estim=NA,Zobs,param=NA,method)
 \item{Ntail}{ Length of the tail of the data set taken - integer
 %%     ~~Describe \code{x} here~~
 }
-\item{estim}{ Method to estimate the parameters of Pareto's function - String: Default value is NA (when the selected method isn't Pareto's). If the selected method is the Pareto's one, estim takes either the value "EMV" for the method of maximum likelihood or the "PWM" for the method of probability weighted moments
+\item{estim}{ Method to estimate the parameters of Pareto's function - String: estim takes either a string that matches "PWM" ("P","PW",...) for the method of probability weighted moments or a string that matches "EMV" ("EM","V",...) for the method of maximum likelihood. Default value is "PWM".
 %%     ~~Describe \code{x} here~~
 }
 \item{Zobs}{ Test statistic of the data set  - real number
 %%     ~~Describe \code{x} here~~
 }
-\item{param}{ Box-cox parameter lambda - real number: Default value is NA that means that the parameter will be estimated with least squares; if it is remplaced by a real number, this value will be used for lambda without performing any estimation
+\item{param}{ Box-cox parameter lambda - real number: if param is missing, the parameter will be estimated with least squares; if it is a real number, this value will be used for lambda without performing any estimation
 %%     ~~Describe \code{x} here~~
 }
-\item{method}{ Method chosen to estimate the p-value  - String: either "GPD" for Pareto's method or "BC" for Box-Cox's method.
+\item{method}{ Method chosen to estimate the p-value  - String: either a string that matches "GDP" ("G", "GP", "PD",...) for Pareto's method or a string that matches "BC" ("BC", "B", ...) for Box-Cox's method. Default value is "BC".
 %%     ~~Describe \code{x} here~~
 }
 }
@@ -76,11 +76,13 @@ function (zsim,Ntail=500,estim=NA,Zobs,param=NA,method)
   zgpd<-z1-t
   zgpd<-zgpd[zgpd>0] #uniquement ceux superieurs au seuil
 
+  method<-match.arg(method)
   if (method == "BC")
     return(list(Pbc_z = PBC_Z(z1,length(zsim),Ntail,param,Zobs)$p,
                 lbda = PBC_Z(z1,length(zsim),Ntail,param,Zobs)$lbda))
 
   if (method =="GPD"){
+    estim<-match.arg(estim)
     if (estim == "PWM")
       return(list(Pgpd=PGPD(Zobs,zgpd,zsim,t,estim),
                   a=PWM(zgpd)$a,
