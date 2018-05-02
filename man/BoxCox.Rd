@@ -21,11 +21,7 @@ BoxCox(z,lambda)
 }
 
 \value{ Returns the value of the function evaluated in z with the parameter lambda chosen.
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+
 }
 
 \author{ Marion
