@@ -1,10 +1,10 @@
 Package: PvalueEsti
 Type: Package
 Title: Estimation of the p-value
-Version: 0.1.0
+Version: 1.0.0
 Author: Marion
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: Estimates the p-value of a data set for an observed test statistic. Two methods can be performed: either the Generalized Pareto Distribution or the Box-Cox transformation applied on test statistics.
-License: What license is it under?
+License: GPL-3
 Encoding: UTF-8
 LazyData: true

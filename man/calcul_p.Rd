@@ -53,48 +53,36 @@ and Ilya Shmulevich, Fewer permutations, more accurate P-values, Bioinformatics.
 \author{ Marion
 %%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 calcul_p(zsim=rnorm(1e6),Zobs=5,method="BC")
 
 ## The function is currently defined as
 function (zsim,Ntail=500,estim=NA,Zobs,param=NA,method)
 {
-# les Ntail plus grandes valeurs (les dernieres)
-  z1 <- tail( sort(zsim) , Ntail )
+# les Ntail + 1 plus grandes valeurs (les dernieres)
+  z1 <- tail( sort(zsim) , Ntail + 1 )
   #seuil pour la GDP
-  t<-(z1[1] + head(sort(zsim,decreasing =TRUE),Ntail+1)[Ntail+1])/2
+  t<-(z1[1] + z1[2])/2
   #calcul des excedents de la GDP, ceux qui lui sont superieurs
+  z1<-z1[-1]
   zgpd<-z1-t
   zgpd<-zgpd[zgpd>0] #uniquement ceux superieurs au seuil
 
   method<-match.arg(method)
-  if (method == "BC")
-    return(list(Pbc_z = PBC_Z(z1,length(zsim),Ntail,param,Zobs)$p,
-                lbda = PBC_Z(z1,length(zsim),Ntail,param,Zobs)$lbda))
+  if (method == "BC") {
+    result<-PBC_Z(z1,length(zsim),Ntail,param,Zobs)
+    return(list(Pbc_z = result$p,
+                lbda = result$lbda))
+    }
 
   if (method =="GPD"){
     estim<-match.arg(estim)
-    if (estim == "PWM")
-      return(list(Pgpd=PGPD(Zobs,zgpd,zsim,t,estim),
-                  a=PWM(zgpd)$a,
-                  k=PWM(zgpd)$k))
-    else
-      return(list(Pgpd=PGPD(Zobs,zgpd,zsim,t,estim),
-                  a=EMV(zgpd)$a,
-                  k=EMV(zgpd)$k))
-}
+    result<-PGPD(Zobs,zgpd,zsim,t,estim)
+    return(list(Pgpd=result$p,
+                  a=result$a,
+                  k=result$k))
   }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+}
+

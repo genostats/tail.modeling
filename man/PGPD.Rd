@@ -31,12 +31,11 @@ PGPD(x0,zexc,y,seuil,estim)
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
-\value{ Returns the value of the estimated p-value.
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+\value{ Returns a list composed of:
+\item{p}{The value of the estimated p-value. -  real number}
+  \item{k }{The estimated parameter k of Pareto's cumulative distribution function - real number}
+  \item{a }{The estimated parameter a of Pareto's cumulative distribution function - real number}
+
 }
 \references{ Theo A. Knijnenburg, Lodewyk F. A. Wessels, Marcel J. T. Reinders
 and Ilya Shmulevich, Fewer permutations, more accurate P-values, Bioinformatics.
@@ -61,11 +60,17 @@ PGPD(3,tail(sort(rnorm(1e6)),500),rnorm(1e6),2,"PWM")
 function (x0,zexc,y,seuil,estim)
 {
   M<-nb_exc(x0,y)
+  result<-FGPD(x0-seuil,zexc,estim)
   if(M >= 10)
-    return(M/length(y))
-  else
-    return(length(zexc)/length(y)*(1-FGPD(x0-seuil,zexc,estim)))
-  }
+    return(list( p = M/length(y),
+                 k = result$k,
+                 a = result$a ))
+  else {
+    return(list( p = length(zexc)/length(y)*(1-result$val),
+                 k = result$k,
+                 a = result$a ))
+    }
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
