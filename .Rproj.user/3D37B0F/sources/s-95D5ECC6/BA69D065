@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1525251048886.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2157410623",
+    "id" : "BA69D065",
+    "lastKnownWriteTime" : 1525251065,
+    "last_content_update" : 1525251065244,
+    "path" : "~/GitHub/tail.modeling/man/BoxCox.Rd",
+    "project_path" : "man/BoxCox.Rd",
+    "properties" : {
+        "cursorPosition" : "18,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_doc"
+}

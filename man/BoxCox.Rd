@@ -1,22 +1,22 @@
 \name{BoxCox}
 \alias{BoxCox}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{ Box-Cox function
-%%  ~~function to do ... ~~
+
 }
 \description{ Computes the Box-Cox function evaluated in a real number z.
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+
 }
 \usage{
 BoxCox(z,lambda)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{z}{ Real number - can also be a list of real numbers
-%%     ~~Describe \code{x} here~~
+
 }
 \item{lambda}{ Box-Cox parameter - real number
-%%     ~~Describe \code{x} here~~
+
 }
 }
 
