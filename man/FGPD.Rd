@@ -22,9 +22,7 @@ FGPD(z,zexc,estim)
 %%     ~~Describe \code{x} here~~
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+
 \value{ Returns a list composed of:
 \item{val}{The value of the cumulative distribution function evaluated in z using the method of estimation chosen - real number}
   \item{k }{The estimated parameter k of Pareto's cumulative distribution function - real number}
@@ -42,15 +40,7 @@ and Ilya Shmulevich, Fewer permutations, more accurate P-values, Bioinformatics.
 \author{ Marion
 %%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 FGPD(30,sort(rnorm(1e6)),"PWM")
 

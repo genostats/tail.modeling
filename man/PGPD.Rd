@@ -28,9 +28,7 @@ PGPD(x0,zexc,y,seuil,estim)
 %%     ~~Describe \code{x} here~~
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+
 \value{ Returns a list composed of:
 \item{p}{The value of the estimated p-value. -  real number}
   \item{k }{The estimated parameter k of Pareto's cumulative distribution function - real number}
@@ -44,15 +42,7 @@ and Ilya Shmulevich, Fewer permutations, more accurate P-values, Bioinformatics.
 \author{ Marion
 %%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 PGPD(3,tail(sort(rnorm(1e6)),500),rnorm(1e6),2,"PWM")
 

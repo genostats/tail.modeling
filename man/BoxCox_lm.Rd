@@ -29,21 +29,11 @@ BoxCox_lm(Y,X)
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+
 \author{ Marion
 %%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 BoxCox_lm(log(-log(seq(500,1)/1e6)),log(tail(sort(rlnorm(1e6)),500)))
 

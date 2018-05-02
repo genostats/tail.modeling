@@ -19,9 +19,7 @@ Lp(u,z)
 %%     ~~Describe \code{x} here~~
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+
 \value{ Returns the value of the loglikelihood.
 %%  ~Describe the value returned
 %%  If it is a LIST, use
@@ -29,21 +27,11 @@ Lp(u,z)
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+
 \author{ Marion
 %%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 Lp(0,sort(rnorm(1e6)))
 

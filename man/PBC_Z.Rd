@@ -41,21 +41,11 @@ PBC_Z(z,Ntot,N,param,Zobs)
 
 %% ...
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+
 \author{ Marion
 %%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 PBC_Z(z = tail(sort(rnorm(1e6)),500),Ntot = 1e6,N = 500,Zobs = 3)
 

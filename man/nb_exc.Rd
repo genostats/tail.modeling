@@ -19,9 +19,7 @@ nb_exc(x0,z)
 %%     ~~Describe \code{x} here~~
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+
 \value{ Returns an integer M which is the number of values of z higher or equal to x0.
 %%  ~Describe the value returned
 %%  If it is a LIST, use
@@ -29,21 +27,11 @@ nb_exc(x0,z)
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+
 \author{ Marion
 %%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 nb_exc(5,1:10)
 

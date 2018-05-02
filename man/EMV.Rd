@@ -16,9 +16,7 @@ EMV(z)
 %%     ~~Describe \code{x} here~~
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
+
 \value{Returns a list of the estimators k and a of the parameters, as real numbers.
 %%  ~Describe the value returned
 %%  If it is a LIST, use
@@ -32,15 +30,7 @@ EMV(z)
 \author{ Marion
 %%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 EMV(tail(sort(rnorm(1e6)),500))
 
