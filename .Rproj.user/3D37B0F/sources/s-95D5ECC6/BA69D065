@@ -5,14 +5,14 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "2157410623",
+    "hash" : "0",
     "id" : "BA69D065",
-    "lastKnownWriteTime" : 1525251065,
-    "last_content_update" : 1525251065244,
+    "lastKnownWriteTime" : 1525251133,
+    "last_content_update" : 1525251133,
     "path" : "~/GitHub/tail.modeling/man/BoxCox.Rd",
     "project_path" : "man/BoxCox.Rd",
     "properties" : {
-        "cursorPosition" : "18,0",
+        "cursorPosition" : "29,0",
         "scrollLine" : "0"
     },
     "relative_order" : 2,
