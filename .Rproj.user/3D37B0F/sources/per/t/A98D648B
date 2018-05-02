@@ -5,13 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "4147194523",
+    "hash" : "1542732664",
     "id" : "A98D648B",
-    "lastKnownWriteTime" : 1525250578,
-    "last_content_update" : 1525250578,
+    "lastKnownWriteTime" : 1525267989,
+    "last_content_update" : 1525267989268,
     "path" : "~/GitHub/tail.modeling/DESCRIPTION",
     "project_path" : "DESCRIPTION",
     "properties" : {
+        "cursorPosition" : "10,0",
+        "scrollLine" : "0"
     },
     "relative_order" : 1,
     "source_on_save" : false,

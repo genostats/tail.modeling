@@ -1,6 +1,6 @@
 Package: PvalueEsti
 Type: Package
-Title: Estimation of the p-value
+Title: Estimation of the p-Value
 Version: 1.0.0
 Author: Marion
 Maintainer: The package maintainer <mariondechallens@gmail.com>

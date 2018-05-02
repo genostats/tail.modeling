@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1525264353060.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1377896435",
+    "id" : "4A6F73D2",
+    "lastKnownWriteTime" : 1525249829,
+    "last_content_update" : 1525249829,
+    "path" : "~/GitHub/tail.modeling/R/BC_functions.R",
+    "project_path" : "R/BC_functions.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
