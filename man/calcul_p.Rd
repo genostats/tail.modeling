@@ -2,7 +2,6 @@
 \alias{calcul_p}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Estimation of the p-value with Pareto's function or Box-Cox function used on distribution's tail.
-%%  ~~function to do ... ~~
 }
 \description{ Estimates the p-value of a given data set zsim with the test statistics Zobs thanks to Pareto's method or Box-Cox method with their different estimated parameters.
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
