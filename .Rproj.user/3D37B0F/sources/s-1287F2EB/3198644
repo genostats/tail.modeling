@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1525264340909.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3198644",
+    "lastKnownWriteTime" : 1526299291,
+    "last_content_update" : 1526299292006,
+    "path" : "~/GitHub/tail.modeling/man/calcul_p.Rd",
+    "project_path" : "man/calcul_p.Rd",
+    "properties" : {
+        "cursorPosition" : "53,10",
+        "scrollLine" : "49"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_doc"
+}
