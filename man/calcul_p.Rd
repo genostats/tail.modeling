@@ -55,7 +55,7 @@ and Ilya Shmulevich, Fewer permutations, more accurate P-values, Bioinformatics.
 calcul_p(zsim=rnorm(1e6),Zobs=5,method="BC")
 
 ## The function is currently defined as
-function (zsim,Ntail=500,estim=NA,Zobs,param=NA,method)
+function (zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method=c("BC","GPD"))
 {
 # les Ntail + 1 plus grandes valeurs (les dernieres)
   z1 <- tail( sort(zsim) , Ntail + 1 )
