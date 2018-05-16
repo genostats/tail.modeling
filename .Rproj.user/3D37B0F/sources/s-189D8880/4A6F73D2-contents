@@ -117,7 +117,7 @@ calcul_p<-function(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method = c("BC
   if (length(zsim)< Nperm) #si on a deja les 500 premières valeurs en entrée, on recree une liste de Nperm valeurs
     zsim<-c(rep(min(zsim),Nperm-length(zsim)),zsim)
   # les Ntail plus grandes valeurs (les dernieres)
-  z1 <- tail( sort(zsim) , Ntail + 1 )
+  z1<- tail( sort(zsim) , Ntail + 1 )
   #seuil pour la GDP
   t<-(z1[1] + z1[2])/2
   #calcul des excedents de la GDP, ceux qui lui sont superieurs

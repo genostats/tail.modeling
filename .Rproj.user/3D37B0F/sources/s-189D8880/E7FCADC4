@@ -7,13 +7,13 @@
     "folds" : "",
     "hash" : "0",
     "id" : "E7FCADC4",
-    "lastKnownWriteTime" : 1526456974,
-    "last_content_update" : 1526456974767,
+    "lastKnownWriteTime" : 1526459854,
+    "last_content_update" : 1526459854522,
     "path" : "~/Stage/packageBC/test_genome.R",
     "project_path" : null,
     "properties" : {
-        "cursorPosition" : "24,28",
-        "scrollLine" : "0"
+        "cursorPosition" : "31,26",
+        "scrollLine" : "11"
     },
     "relative_order" : 4,
     "source_on_save" : false,
