@@ -95,13 +95,15 @@ BoxCox_lm <- function(Y,X) {  #estimation de lambda par les moindres carres
   optimize(f,c(0,1))$minimum
 }
 
-PBC_Z<-function(z,Ntot,N,param,Zobs){
+PBC_Z<-function(z,Ntot,N,param,Zobs,draw){
   p<-seq(N,1)/Ntot
   if (missing(param))
     lambda <- BoxCox_lm(log(-log(p)),log(z))
   else
     lambda <- param
   coeffs <- lm(  log(-log(p)) ~ BoxCox(log(z),lambda) )$coefficients
+  if (draw == TRUE)
+    plot(coeffs[[1]] + BoxCox(log(z),lambda) * coeffs[[2]],log(-log(p)),col="red",main="Linear regression of the Box-Plot method")
   return(list(p = exp(-exp(sum( coeffs*c(1, BoxCox(log(Zobs),lambda))))),
               interc = coeffs[[1]],
               pente = coeffs[[2]],
@@ -111,7 +113,9 @@ PBC_Z<-function(z,Ntot,N,param,Zobs){
 
 ## regroupement des p valeurs des differentes methodes ----
 
-calcul_p<-function(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method = c("BC","GPD")){
+calcul_p<-function(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method = c("BC","GPD"),Nperm,draw=FALSE){
+  if (length(zsim)< Nperm) #si on a deja les 500 premières valeurs en entrée, on recree une liste de Nperm valeurs
+    zsim<-c(rep(min(zsim),Nperm-length(zsim)),zsim)
   # les Ntail plus grandes valeurs (les dernieres)
   z1 <- tail( sort(zsim) , Ntail + 1 )
   #seuil pour la GDP
@@ -123,8 +127,10 @@ calcul_p<-function(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method = c("BC
 
   method<-match.arg(method)
   if (method == "BC") {
-    result<-PBC_Z(z1,length(zsim),Ntail,param,Zobs)
+    result<-PBC_Z(z1,length(zsim),Ntail,param,Zobs,draw)
     return(list(Pbc_z = result$p,
+                pente = result$pente,
+                interc = result$interc,
                 lbda = result$lbda))
   }
 

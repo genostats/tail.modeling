@@ -1,19 +1,21 @@
 {
     "collab_server" : "",
     "contents" : "",
-    "created" : 1526299319041.000,
+    "created" : 1526456392969.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "2411102254",
-    "id" : "E762A49D",
-    "lastKnownWriteTime" : 1525249829,
-    "last_content_update" : 1525249829,
+    "hash" : "3846655397",
+    "id" : "574A1DAF",
+    "lastKnownWriteTime" : 1526457626,
+    "last_content_update" : 1526457626298,
     "path" : "~/GitHub/tail.modeling/man/PBC_Z.Rd",
     "project_path" : "man/PBC_Z.Rd",
     "properties" : {
+        "cursorPosition" : "69,0",
+        "scrollLine" : "42"
     },
-    "relative_order" : 6,
+    "relative_order" : 2,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_doc"

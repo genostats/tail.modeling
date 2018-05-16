@@ -5,7 +5,7 @@
 \description{ Estimates the p-value of a given data set zsim with the test statistics Zobs thanks to Pareto's method or Box-Cox method with their different estimated parameters.
 }
 \usage{
-calcul_p(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method=c("BC","GPD"))
+calcul_p(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method=c("BC","GPD"),Nperm,draw=FALSE)
 }
 
 \arguments{
@@ -27,13 +27,20 @@ calcul_p(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method=c("BC","GPD"))
 \item{method}{ Method chosen to estimate the p-value  - String: either a string that matches "GDP" ("G", "GP", "PD",...) for Pareto's method or a string that matches "BC" ("BC", "B", ...) for Box-Cox's method. Default value is "BC".
 
 }
+\item{Nperm}{ Number of permutations of the original data set  - integer
 }
+\item{draw}{ If the linear regression of the Box-Plot method should be plotted or not - Boolean. Default value is FALSE.
+}
+}
+
 \details{ Both methods are applied on the distribution's tail of the data set.
 
 }
 \value{ Returns a list composed of the estimated p-value and the parameter(s) of the selected method of estimation.
 If the selected method is "BC", it returns a list composed of:
  \item{Pbc_z }{The estimated p-value with Box-Cox function -  real number}
+ \item{interc }{The intercept of the linear regression used to estimate the p-value - real number}
+  \item{pente }{The slope of the linear regression used to estimate the p-value - real number}
  \item{lambda }{The estimated parameter lambda (or the lambda given if not estimated) - real number}
 
 If the selected method is "GPD", it returns a list composed of:
@@ -52,12 +59,13 @@ and Ilya Shmulevich, Fewer permutations, more accurate P-values, Bioinformatics.
 }
 
 \examples{
-calcul_p(zsim=rnorm(1e6),Zobs=5,method="BC")
+calcul_p(zsim=rnorm(1e6),Zobs=5,method="BC",Nperm=1e6)
 
 ## The function is currently defined as
-function (zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method=c("BC","GPD"))
-{
-# les Ntail + 1 plus grandes valeurs (les dernieres)
+function(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method = c("BC","GPD"),Nperm,draw=FALSE){
+  if (length(zsim)< Nperm) #si on a deja les 500 premières valeurs en entrée, on recree une liste de Nperm valeurs
+    zsim<-c(rep(min(zsim),Nperm-length(zsim)),zsim)
+  # les Ntail plus grandes valeurs (les dernieres)
   z1 <- tail( sort(zsim) , Ntail + 1 )
   #seuil pour la GDP
   t<-(z1[1] + z1[2])/2
@@ -68,10 +76,12 @@ function (zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method=c("BC","GPD"))
 
   method<-match.arg(method)
   if (method == "BC") {
-    result<-PBC_Z(z1,length(zsim),Ntail,param,Zobs)
+    result<-PBC_Z(z1,length(zsim),Ntail,param,Zobs,draw)
     return(list(Pbc_z = result$p,
+                pente = result$pente,
+                interc = result$interc,
                 lbda = result$lbda))
-    }
+  }
 
   if (method =="GPD"){
     estim<-match.arg(estim)
@@ -79,7 +89,10 @@ function (zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method=c("BC","GPD"))
     return(list(Pgpd=result$p,
                   a=result$a,
                   k=result$k))
+
   }
+
+
 }
 }
 

@@ -1,0 +1,43 @@
+# require(oz)
+# x <- read.bed.matrix("1KG_eur_maf1pm_genes_chr22")
+# FST <- Sum.Fst(x, group = x@ped$population, genomic.region = x@snps$gene)
+# write.table(FST, file = "FST_chr22.txt")
+# 
+# FST.1 <- Sum.Fst.higher.perms(x,  group = x@ped$population, genomic.region = x@snps$gene, which.snps = x@snps$gene %in% c("SHANK3", "IL17RA", "CECR5"), n.keep = 500, B = 1e6)
+# save(FST.1, file = "FST_1.RData")
+
+
+library(PvalueEsti)
+load("C:/Users/Marion/Documents/Stage/packageBC/FST_1.RData")
+
+result<-data.frame(matrix(nrow=3,ncol=4))
+colnames(result)<-c("Genes","GPD-PWM","GPD-EMV","BC-LS")
+result$Genes<-names(FST.1)
+
+for (i in 1:length(FST.1)){
+  gene<-FST.1[[i]] 
+  # gene2<-c(rep(min(gene[1:500]),1e6-500),gene[1:500]) #create a list of 10^6 elements because the functions of the package already takes the last 500 values
+  #the observed test stat is the 501th value of gene
+  result[i,2]<-calcul_p(zsim=gene,
+                Zobs=gene[501], 
+                method="GPD",
+                estim="PWM",
+                Nperm = 1e6,
+                draw=T)$Pgpd
+  result[i,3]<-calcul_p(zsim=gene,
+                Zobs=gene[501],
+                method="GPD",
+                estim="EMV",
+                Nperm=1e6,
+                draw=T)$Pgpd
+  
+  result[i,4]<-calcul_p(zsim=gene,
+              Zobs=gene[501],
+              method="BC",
+              Nperm = 1e6,
+              draw=T)$Pbc_z
+  
+}
+
+
+

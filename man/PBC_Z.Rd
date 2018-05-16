@@ -8,7 +8,7 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-PBC_Z(z,Ntot,N,param,Zobs)
+PBC_Z(z,Ntot,N,param,Zobs,draw)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -26,6 +26,8 @@ PBC_Z(z,Ntot,N,param,Zobs)
 }
 \item{Zobs}{ Test statistic of the data set  - real number
 %%     ~~Describe \code{x} here~~
+}
+\item{draw}{ If the linear regression of the Box-Plot method should be plotted or not - Boolean.
 }
 }
 \details{ The method is to compute the coefficients of the linear regression between log(-log(p)) and BoxCox(log(z)) where p is a list of probabilities correspondings to the sorted list of test statistics z.
@@ -50,19 +52,22 @@ PBC_Z(z,Ntot,N,param,Zobs)
 PBC_Z(z = tail(sort(rnorm(1e6)),500),Ntot = 1e6,N = 500,Zobs = 3)
 
 ## The function is currently defined as
-function (x)
-{
+function(z,Ntot,N,param,Zobs,draw){
   p<-seq(N,1)/Ntot
   if (missing(param))
     lambda <- BoxCox_lm(log(-log(p)),log(z))
   else
     lambda <- param
   coeffs <- lm(  log(-log(p)) ~ BoxCox(log(z),lambda) )$coefficients
+  if (draw == TRUE)
+    plot(coeffs[[1]] + BoxCox(log(z),lambda) * coeffs[[2]],log(-log(p)),col="red",main="Linear regression of the Box-Plot method")
   return(list(p = exp(-exp(sum( coeffs*c(1, BoxCox(log(Zobs),lambda))))),
               interc = coeffs[[1]],
               pente = coeffs[[2]],
               lbda = lambda))
-  }
+
+}
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
