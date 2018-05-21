@@ -1,4 +1,3 @@
-exportPattern("^[[:alpha:]]+")
 importFrom("stats", "cov", "lm", "optimize", "var")
 importFrom("utils", "head", "tail")
-export(calcul_p)
+export(calcul_p, p.value)
