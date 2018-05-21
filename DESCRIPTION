@@ -1,10 +1,10 @@
 Package: PvalueEsti
 Type: Package
-Title: Estimation of the p-Value
-Version: 1.0.0
-Author: Marion
-Maintainer: The package maintainer <mariondechallens@gmail.com>
-Description: Estimates the p-value of a data set for an observed test statistic. Two methods can be performed: either the Generalized Pareto Distribution or the Box-Cox transformation applied on test statistics.
+Title: Estimation of small p-values 
+Version: 1.0
+Author: Marion Favre d\'Echallens
+Maintainer: Marion Favre d\'Echallens <mariondechallens@gmail.com>
+Description: Estimates a p-value given an observed test statistic and a set of permuted p-values. The tail of the distribution can be modeled by the Generalized Pareto Distribution or by Tail Regression.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
