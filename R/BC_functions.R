@@ -55,22 +55,24 @@ FGPD<-function(z,zexc,estim){
                 a = a))
 }
 
-#calcul de Pgpd
-PGPD <- function(x0, zexc, y, seuil, estim){
-  M <- nb_exc(x0, y)
-  result <- FGPD(x0-seuil, zexc, estim)
-  if(M >= 10)
-    return(list(p = M/length(y),
-                k = result$k,
-                a = result$a ))
-  else {
-    return(list( p = length(zexc)/length(y)*(1-result$val),
-                 k = result$k,
-                 a = result$a ))
-  }
-}
+#ancienne fonction PGPD
 
-PGPD.1 <- function(x0, zexc, Nperm, seuil, estim){
+#calcul de Pgpd
+# PGPD <- function(x0, zexc, y, seuil, estim){
+#   M <- nb_exc(x0, y)
+#   result <- FGPD(x0-seuil, zexc, estim)
+#   if(M >= 10)
+#     return(list(p = M/length(y),
+#                 k = result$k,
+#                 a = result$a ))
+#   else {
+#     return(list( p = length(zexc)/length(y)*(1-result$val),
+#                  k = result$k,
+#                  a = result$a ))
+#   }
+# }
+
+PGPD <- function(x0, zexc, Nperm, seuil, estim){
   M <- nb_exc(x0 - seuil, zexc)
   if(M >= 10) # Mieux vaut ne pas retourner k et a si on ne les a pas utilisés pour calculer p !
     return(list(p = M/Nperm,
@@ -127,8 +129,8 @@ PBC_Z <- function(z,Ntot,N,param,Zobs,draw){
 
 ## regroupement des p valeurs des differentes methodes ----
 
-p.value <- function(zsim, Ntail=500, estim=c("PWM","EMV"), Zobs, param, method = c("BC","GPD"), Nperm = length(Zsim), draw = FALSE){
-  if(length(zsim) < Ntail) 
+calcul_p <- function(zsim, Ntail=500, estim=c("PWM","EMV"), Zobs, param, method = c("BC","GPD"), Nperm = length(zsim), draw = FALSE){
+  if(length(zsim) < Ntail)
     stop("Ntail can't be larger than length(zsim)")
 
   method <- match.arg(method)
@@ -157,43 +159,44 @@ p.value <- function(zsim, Ntail=500, estim=c("PWM","EMV"), Zobs, param, method =
     zgpd<-zgpd[zgpd>0] #uniquement ceux superieurs au seuil
 
     estim<-match.arg(estim)
-    result<-PGPD.1(Zobs, zgpd, Nperm, t, estim)
+    result<-PGPD(Zobs, zgpd, Nperm, t, estim)
     return(list(Pgpd = result$p,
                    a = result$a,
                    k = result$k))
   }
 }
 
+# ancienne fonction calcul_p
 
-calcul_p <- function(zsim, Ntail=500, estim=c("PWM","EMV"), Zobs, param, method = c("BC","GPD"), Nperm, draw=FALSE){
-  if (length(zsim)< Nperm) #si on a deja les 500 premières valeurs en entrée, on recree une liste de Nperm valeurs
-    zsim<-c(rep(min(zsim),Nperm-length(zsim)),zsim)
-  # les Ntail plus grandes valeurs (les dernieres)
-  z1<- tail( sort(zsim) , Ntail + 1 )
-  #seuil pour la GDP
-  t<-(z1[1] + z1[2])/2
-  #calcul des excedents de la GDP, ceux qui lui sont superieurs
-  z1<-z1[-1]
-  zgpd<-z1-t
-  zgpd<-zgpd[zgpd>0] #uniquement ceux superieurs au seuil
-
-  method<-match.arg(method)
-  if (method == "BC") {
-    result<-PBC_Z(z1,length(zsim),Ntail,param,Zobs,draw)
-    return(list(Pbc_z = result$p,
-                pente = result$pente,
-                interc = result$interc,
-                lbda = result$lbda))
-  }
-
-  if (method =="GPD"){
-    estim<-match.arg(estim)
-    result<-PGPD(Zobs,zgpd,zsim,t,estim)
-    return(list(Pgpd=result$p,
-                  a=result$a,
-                  k=result$k))
-
-  }
-}
+# calcul_p <- function(zsim, Ntail=500, estim=c("PWM","EMV"), Zobs, param, method = c("BC","GPD"), Nperm, draw=FALSE){
+#   if (length(zsim)< Nperm) #si on a deja les 500 premières valeurs en entrée, on recree une liste de Nperm valeurs
+#     zsim<-c(rep(min(zsim),Nperm-length(zsim)),zsim)
+#   # les Ntail plus grandes valeurs (les dernieres)
+#   z1<- tail( sort(zsim) , Ntail + 1 )
+#   #seuil pour la GDP
+#   t<-(z1[1] + z1[2])/2
+#   #calcul des excedents de la GDP, ceux qui lui sont superieurs
+#   z1<-z1[-1]
+#   zgpd<-z1-t
+#   zgpd<-zgpd[zgpd>0] #uniquement ceux superieurs au seuil
+#
+#   method<-match.arg(method)
+#   if (method == "BC") {
+#     result<-PBC_Z(z1,length(zsim),Ntail,param,Zobs,draw)
+#     return(list(Pbc_z = result$p,
+#                 pente = result$pente,
+#                 interc = result$interc,
+#                 lbda = result$lbda))
+#   }
+#
+#   if (method =="GPD"){
+#     estim<-match.arg(estim)
+#     result<-PGPD(Zobs,zgpd,zsim,t,estim)
+#     return(list(Pgpd=result$p,
+#                   a=result$a,
+#                   k=result$k))
+#
+#   }
+# }
 
 

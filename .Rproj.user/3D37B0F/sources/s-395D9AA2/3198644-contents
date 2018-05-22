@@ -5,7 +5,7 @@
 \description{ Estimates the p-value of a given data set zsim with the test statistics Zobs thanks to Pareto's method or Box-Cox method with their different estimated parameters.
 }
 \usage{
-calcul_p(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method=c("BC","GPD"),Nperm,draw=FALSE)
+calcul_p(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method=c("BC","GPD"),Nperm=length(zsim),draw=FALSE)
 }
 
 \arguments{
@@ -27,7 +27,7 @@ calcul_p(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method=c("BC","GPD"),Npe
 \item{method}{ Method chosen to estimate the p-value  - String: either a string that matches "GDP" ("G", "GP", "PD",...) for Pareto's method or a string that matches "BC" ("BC", "B", ...) for Box-Cox's method. Default value is "BC".
 
 }
-\item{Nperm}{ Number of permutations of the original data set  - integer
+\item{Nperm}{ Number of permutations of the original data set  - integer. Default value is length(zsim)
 }
 \item{draw}{ If the linear regression of the Box-Plot method should be plotted or not - Boolean. Default value is FALSE.
 }
@@ -59,40 +59,47 @@ and Ilya Shmulevich, Fewer permutations, more accurate P-values, Bioinformatics.
 }
 
 \examples{
-calcul_p(zsim=rnorm(1e6),Zobs=5,method="BC",Nperm=1e6)
+calcul_p(zsim=rnorm(1e6),Zobs=5,method="BC")
 
 ## The function is currently defined as
-function(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method = c("BC","GPD"),Nperm,draw=FALSE){
-  if (length(zsim)< Nperm) #si on a deja les 500 premières valeurs en entrée, on recree une liste de Nperm valeurs
-    zsim<-c(rep(min(zsim),Nperm-length(zsim)),zsim)
-  # les Ntail plus grandes valeurs (les dernieres)
-  z1 <- tail( sort(zsim) , Ntail + 1 )
-  #seuil pour la GDP
-  t<-(z1[1] + z1[2])/2
-  #calcul des excedents de la GDP, ceux qui lui sont superieurs
-  z1<-z1[-1]
-  zgpd<-z1-t
-  zgpd<-zgpd[zgpd>0] #uniquement ceux superieurs au seuil
+function(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method = c("BC","GPD"),Nperm=length(zsim),draw=FALSE){
+  if(length(zsim) < Ntail)
+    stop("Ntail can't be larger than length(zsim)")
 
-  method<-match.arg(method)
+  method <- match.arg(method)
+
   if (method == "BC") {
-    result<-PBC_Z(z1,length(zsim),Ntail,param,Zobs,draw)
-    return(list(Pbc_z = result$p,
-                pente = result$pente,
+    # les Ntail plus grandes valeurs (les dernieres)
+    z1 <- tail( sort(zsim) , Ntail )
+
+    result <- PBC_Z(z1, Nperm, Ntail, param, Zobs, draw)
+    return(list(Pbc_z  = result$p,
+                pente  = result$pente,
                 interc = result$interc,
-                lbda = result$lbda))
+                lbda   = result$lbda))
   }
 
   if (method =="GPD"){
+    # les Ntail + 1 plus grandes valeurs (les dernieres)
+    z1 <- tail( sort(zsim) , Ntail + 1 )
+
+    #seuil pour la GDP
+    t<-(z1[1] + z1[2])/2
+
+    #calcul des excedents de la GDP, ceux qui lui sont superieurs
+    z1<-z1[-1]
+    zgpd<-z1-t
+    zgpd<-zgpd[zgpd>0] #uniquement ceux superieurs au seuil
+
     estim<-match.arg(estim)
-    result<-PGPD(Zobs,zgpd,zsim,t,estim)
-    return(list(Pgpd=result$p,
-                  a=result$a,
-                  k=result$k))
-
+    result<-PGPD(Zobs, zgpd, Nperm, t, estim)
+    return(list(Pgpd = result$p,
+                   a = result$a,
+                   k = result$k))
   }
+}
 
 
 }
-}
+
 

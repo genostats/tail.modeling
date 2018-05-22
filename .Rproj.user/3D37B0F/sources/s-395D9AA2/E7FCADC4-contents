@@ -16,7 +16,6 @@ result$Genes<-names(FST.1)
 
 for (i in 1:length(FST.1)){
   gene<-FST.1[[i]] 
-  #gene2<-c(rep(min(gene[1:500]),1e6-500),gene[1:500]) #create a list of 10^6 elements because the functions of the package already takes the last 500 values
   #the observed test stat is the 501th value of gene
   #the 500 first are the test statistics got by permutations
   result[i,2]<-calcul_p(zsim=gene[1:500],
@@ -40,5 +39,22 @@ for (i in 1:length(FST.1)){
   
 }
 
+##Testing Monte Carlo Algorithm
+library(EXPERT)
 
+data.input<-FST.1[[2]][1:500]
+t.obs<-FST.1[[2]][501]
 
+one_sample_t_test<-function (data.input) 
+{
+    t.test(data.input)$statistic[[1]]
+}
+
+permute_vector_one<-function (data.input, prop.change) #no update for one sample data
+{
+data.input
+}
+SAMC.adapt(data.input,
+           t.obs,
+           fun.test.statistic = one_sample_t_test, 
+           fun.proposal=permute_vector_one)

@@ -8,7 +8,7 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-PGPD(x0,zexc,y,seuil,estim)
+PGPD(x0,zexc,Nperm,seuil,estim)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,7 +18,7 @@ PGPD(x0,zexc,y,seuil,estim)
   \item{zexc}{ Data set which results from the initial one y - sorted list of real numbers
 %%     ~~Describe \code{x} here~~
 }
-  \item{y}{ Data set - list of real numbers
+  \item{Nperm}{ Number of permutations - integer
 %%     ~~Describe \code{x} here~~
 }
 \item{seuil}{ Threshold used to create the data set zexc composed of the values of y higher or equal to (x0 - seuil) - real number
@@ -31,8 +31,8 @@ PGPD(x0,zexc,y,seuil,estim)
 
 \value{ Returns a list composed of:
 \item{p}{The value of the estimated p-value. -  real number}
-  \item{k }{The estimated parameter k of Pareto's cumulative distribution function - real number}
-  \item{a }{The estimated parameter a of Pareto's cumulative distribution function - real number}
+  \item{k }{The estimated parameter k of Pareto's cumulative distribution function if it was used to compute the p-value - real number}
+  \item{a }{The estimated parameter a of Pareto's cumulative distribution function if it was used to compute the p-value - real number}
 
 }
 \references{ Theo A. Knijnenburg, Lodewyk F. A. Wessels, Marcel J. T. Reinders
@@ -44,25 +44,24 @@ and Ilya Shmulevich, Fewer permutations, more accurate P-values, Bioinformatics.
 }
 
 \examples{
-PGPD(3,tail(sort(rnorm(1e6)),500),rnorm(1e6),2,"PWM")
+PGPD(3,tail(sort(rnorm(1e6)),500),1e6,2,"PWM")
 
 ## The function is currently defined as
-function (x0,zexc,y,seuil,estim)
+function (x0,zexc,Nperm,seuil,estim)
 {
-  M<-nb_exc(x0,y)
-  result<-FGPD(x0-seuil,zexc,estim)
+  M<-nb_exc(x0-seuil,zexc)
+
   if(M >= 10)
-    return(list( p = M/length(y),
-                 k = result$k,
-                 a = result$a ))
+    return(list( p = M/Nperm,
+                 k = NA,
+                 a = NA ))
   else {
-    return(list( p = length(zexc)/length(y)*(1-result$val),
+    result<-FGPD(x0-seuil,zexc,estim)
+    return(list( p = length(zexc)/Nperm*(1-result$val),
                  k = result$k,
                  a = result$a ))
     }
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
 \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

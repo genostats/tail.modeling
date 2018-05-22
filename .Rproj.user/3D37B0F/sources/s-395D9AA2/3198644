@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "3789766189",
     "id" : "3198644",
-    "lastKnownWriteTime" : 1526457556,
-    "last_content_update" : 1526457556761,
+    "lastKnownWriteTime" : 1526975454,
+    "last_content_update" : 1526975454257,
     "path" : "~/GitHub/tail.modeling/man/calcul_p.Rd",
     "project_path" : "man/calcul_p.Rd",
     "properties" : {
-        "cursorPosition" : "33,1",
-        "scrollLine" : "45"
+        "cursorPosition" : "61,23",
+        "scrollLine" : "48"
     },
     "relative_order" : 1,
     "source_on_save" : false,
