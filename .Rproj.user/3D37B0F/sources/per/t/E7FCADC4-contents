@@ -2,24 +2,27 @@
 # x <- read.bed.matrix("1KG_eur_maf1pm_genes_chr22")
 # FST <- Sum.Fst(x, group = x@ped$population, genomic.region = x@snps$gene)
 # write.table(FST, file = "FST_chr22.txt")
-# 
+#
+# start<-Sys.time()
 # FST.1 <- Sum.Fst.higher.perms(x,  group = x@ped$population, genomic.region = x@snps$gene, which.snps = x@snps$gene %in% c("SHANK3", "IL17RA", "CECR5"), n.keep = 500, B = 1e6)
+# end <- Sys.time()
+# print(end - start)
 # save(FST.1, file = "FST_1.RData")
 
 
 library(PvalueEsti)
-load("C:/Users/Marion/Documents/Stage/packageBC/FST_1.RData")
+load("C:/Users/Marion/Documents/Stage/packageBC/FST5_50.RData")
 
-result<-data.frame(matrix(nrow=3,ncol=4))
+result<-data.frame(matrix(nrow=length(FST.1),ncol=4))
 colnames(result)<-c("Genes","GPD-PWM","GPD-EMV","BC-LS")
 result$Genes<-names(FST.1)
 
 for (i in 1:length(FST.1)){
-  gene<-FST.1[[i]] 
+  gene<-FST.1[[i]]
   #the observed test stat is the 501th value of gene
   #the 500 first are the test statistics got by permutations
   result[i,2]<-calcul_p(zsim=gene[1:500],
-                Zobs=gene[501], 
+                Zobs=gene[501],
                 method="GPD",
                 estim="PWM",
                 Nperm = 1e6,
@@ -30,31 +33,12 @@ for (i in 1:length(FST.1)){
                 estim="EMV",
                 Nperm=1e6,
                 draw=T)$Pgpd
-  
+
   result[i,4]<-calcul_p(zsim=gene[1:500],
               Zobs=gene[501],
               method="BC",
               Nperm = 1e6,
-              draw=T)$Pbc_z
-  
+              draw=F)$Pbc_z
+
 }
 
-##Testing Monte Carlo Algorithm
-library(EXPERT)
-
-data.input<-FST.1[[2]][1:500]
-t.obs<-FST.1[[2]][501]
-
-one_sample_t_test<-function (data.input) 
-{
-    t.test(data.input)$statistic[[1]]
-}
-
-permute_vector_one<-function (data.input, prop.change) #no update for one sample data
-{
-data.input
-}
-SAMC.adapt(data.input,
-           t.obs,
-           fun.test.statistic = one_sample_t_test, 
-           fun.proposal=permute_vector_one)

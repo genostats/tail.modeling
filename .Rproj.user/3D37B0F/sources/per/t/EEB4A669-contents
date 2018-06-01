@@ -1,3 +1,0 @@
-importFrom("stats", "cov", "lm", "optimize", "var")
-importFrom("utils", "head", "tail")
-export(calcul_p)

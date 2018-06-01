@@ -1,21 +1,21 @@
 {
     "collab_server" : "",
     "contents" : "",
-    "created" : 1525264340909.000,
+    "created" : 1527863778185.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3789766189",
-    "id" : "3198644",
-    "lastKnownWriteTime" : 1526975454,
-    "last_content_update" : 1526975454257,
+    "hash" : "3069307767",
+    "id" : "8AFF0C6C",
+    "lastKnownWriteTime" : 1527863798,
+    "last_content_update" : 1527863798239,
     "path" : "~/GitHub/tail.modeling/man/calcul_p.Rd",
     "project_path" : "man/calcul_p.Rd",
     "properties" : {
-        "cursorPosition" : "61,23",
-        "scrollLine" : "48"
+        "cursorPosition" : "78,30",
+        "scrollLine" : "56"
     },
-    "relative_order" : 1,
+    "relative_order" : 4,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_doc"
