@@ -11,34 +11,45 @@
 
 
 library(PvalueEsti)
-load("C:/Users/Marion/Documents/Stage/packageBC/FST5_50.RData")
+load("C:/Users/Marion/Documents/Stage/packageBC/FST5_151_450.RData")  #10^5 permutations!!
+FST<-FST.3
 
-result<-data.frame(matrix(nrow=length(FST.1),ncol=4))
-colnames(result)<-c("Genes","GPD-PWM","GPD-EMV","BC-LS")
-result$Genes<-names(FST.1)
+result<-data.frame(matrix(nrow=length(FST),ncol=4))
+colnames(result)<-c("Genes","GPD.PWM","GPD.EMV","BC.LS")
+result$Genes<-names(FST)
+lam<-rep(0,length(FST))
 
-for (i in 1:length(FST.1)){
-  gene<-FST.1[[i]]
+for (i in 1:length(FST)){
+  gene<-FST[[i]]
   #the observed test stat is the 501th value of gene
   #the 500 first are the test statistics got by permutations
   result[i,2]<-calcul_p(zsim=gene[1:500],
                 Zobs=gene[501],
                 method="GPD",
                 estim="PWM",
-                Nperm = 1e6,
+                Nperm = 1e5,
                 draw=T)$Pgpd
   result[i,3]<-calcul_p(zsim=gene[1:500],
                 Zobs=gene[501],
                 method="GPD",
                 estim="EMV",
-                Nperm=1e6,
+                Nperm=1e5,
                 draw=T)$Pgpd
 
-  result[i,4]<-calcul_p(zsim=gene[1:500],
+  res<-calcul_p(zsim=gene[1:500],
               Zobs=gene[501],
               method="BC",
-              Nperm = 1e6,
-              draw=F)$Pbc_z
+              Nperm = 1e5,
+              draw=F)
+  result[i,4]<-res$Pbc_z
+  lam[i] <- res$lbda
+
 
 }
+
+result[is.na(result)]<-0
+resultB<-read.csv2("C:/Users/Marion/Documents/Stage/packageBC/pvalue.csv")
+resultF<-rbind(resultB,result)
+
+write.csv2(resultF, file="C:/Users/Marion/Documents/Stage/packageBC/pvalue.csv",row.names=F)
 

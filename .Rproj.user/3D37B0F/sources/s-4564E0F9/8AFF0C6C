@@ -5,7 +5,7 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3069307767",
+    "hash" : "0",
     "id" : "8AFF0C6C",
     "lastKnownWriteTime" : 1527863798,
     "last_content_update" : 1527863798239,
@@ -13,7 +13,7 @@
     "project_path" : "man/calcul_p.Rd",
     "properties" : {
         "cursorPosition" : "78,30",
-        "scrollLine" : "56"
+        "scrollLine" : "67"
     },
     "relative_order" : 4,
     "source_on_save" : false,

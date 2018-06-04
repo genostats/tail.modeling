@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3360229969",
+    "hash" : "211065459",
     "id" : "4A6F73D2",
-    "lastKnownWriteTime" : 1527863816,
-    "last_content_update" : 1527863816403,
+    "lastKnownWriteTime" : 1528099246,
+    "last_content_update" : 1528099246387,
     "path" : "~/GitHub/tail.modeling/R/BC_functions.R",
     "project_path" : "R/BC_functions.R",
     "properties" : {
-        "cursorPosition" : "141,72",
-        "scrollLine" : "126"
+        "cursorPosition" : "143,47",
+        "scrollLine" : "132"
     },
     "relative_order" : 3,
     "source_on_save" : false,
