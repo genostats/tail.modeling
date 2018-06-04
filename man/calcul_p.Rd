@@ -72,11 +72,14 @@ function(zsim,Ntail=500,estim=c("PWM","EMV"),Zobs,param,method = c("BC","GPD"),N
     # les Ntail plus grandes valeurs (les dernieres)
     z1 <- tail( sort(zsim) , Ntail )
 
-    if (length(log(z1)[log(z1)<=0]) == length(z1))
-      return(list(Pbc_z  = 0,
-                  pente  = 0,
-                  interc = 0,
-                  lbda   = 0))
+    if (length(log(z1)[log(z1)<=0]) > 0) # eviter les negatifs
+    {
+      result <- PBC_Z(z1, Nperm, Ntail, param=1, Zobs, draw)
+      return(list(Pbc_z  = result$p,
+                  pente  = result$pente,
+                  interc = result$interc,
+                  lbda   = result$lbda))
+    }
     else
     {
       result <- PBC_Z(z1, Nperm, Ntail, param, Zobs, draw)

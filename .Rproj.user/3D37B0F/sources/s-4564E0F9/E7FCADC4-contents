@@ -40,7 +40,7 @@ for (i in 1:length(FST)){
               Zobs=gene[501],
               method="BC",
               Nperm = 1e5,
-              draw=F)
+              draw=T)
   result[i,4]<-res$Pbc_z
   lam[i] <- res$lbda
 

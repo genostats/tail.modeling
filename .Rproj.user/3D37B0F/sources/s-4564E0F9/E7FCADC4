@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "1649020297",
     "id" : "E7FCADC4",
-    "lastKnownWriteTime" : 1528099978,
-    "last_content_update" : 1528099978816,
+    "lastKnownWriteTime" : 1528100434,
+    "last_content_update" : 1528100434384,
     "path" : "~/Stage/packageBC/test_genome.R",
     "project_path" : null,
     "properties" : {
-        "cursorPosition" : "46,0",
-        "scrollLine" : "26"
+        "cursorPosition" : "43,2",
+        "scrollLine" : "18"
     },
     "relative_order" : 4,
     "source_on_save" : false,
